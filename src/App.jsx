@@ -4,6 +4,7 @@ import Login from "./Routes/Login";
 import Home from "./Routes/Home";
 import Navbar from "./Components/Navbar";
 import RequireAuth from "./Components/RequireAuth";
+import Register from "./Routes/Register";
 
 const App = () => {
   return (
@@ -20,6 +21,7 @@ const App = () => {
           }
         />
         <Route path="/login" element={<Login />}></Route>
+        <Route path="/register" element={<Register />}></Route>
       </Routes>
     </>
   );
