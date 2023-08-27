@@ -1,9 +1,12 @@
 import { useContext, useState } from "react";
 import { UserContext } from "../Context/UserProvider";
+import {useNavigate} from "react-router-dom";
 
 const Register = () => {
   const [email, setEmail] = useState("dannyphaton@test.com");
   const [password, setPassword] = useState("123123");
+
+  const navegate = useNavigate()
 
   const {registerUser} = useContext(UserContext)
 
@@ -13,6 +16,7 @@ const Register = () => {
     try{
         await registerUser(email, password);
         console.log("Usario creado")
+        navegate("/")
     }catch (error) {
         console.log(error.code)
         alert("Este correo ya esta registrado")

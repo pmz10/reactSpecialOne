@@ -16,6 +16,7 @@ const Login = () => {
     try{
         await loginUser(email, password);
         console.log("Usario logueado")
+        navegate("/")
     }catch (error) {
         console.log(error.code)
         alert("Este correo ya esta registrado")
@@ -39,7 +40,7 @@ const Login = () => {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-        <button type="submit">Register</button>
+        <button type="submit">Login</button>
       </form>
     </>
   );
