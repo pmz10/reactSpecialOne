@@ -1,18 +1,24 @@
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { UserContext } from "../Context/UserProvider";
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
 
 const Register = () => {
-  const [email, setEmail] = useState("dannyphaton@test.com");
-  const [password, setPassword] = useState("123123");
+  const navegate = useNavigate();
 
-  const navegate = useNavigate()
+  const { registerUser } = useContext(UserContext);
 
-  const {registerUser} = useContext(UserContext)
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    getValues,
+  } = useForm();
 
-  const handleSubmit = async(e) => {
-    e.preventDefault()
-    console.log("procesando form:", email, password);
+
+
+  const onSubmit = async({email, password}) => {
+    console.log(email, password);
     try{
         await registerUser(email, password);
         console.log("Usario creado")
@@ -22,23 +28,52 @@ const Register = () => {
         alert("Este correo ya esta registrado")
     }
   };
+ 
+  
 
   return (
     <>
       <h1>Register</h1>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <input
           type="email"
           placeholder="Ingresar email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          {...register("email", {
+            required: { value: true, message: "Campo obligatorio" },
+            pattern: {
+              value:
+                /[a-z-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,15})/,
+              message: "Formato de email incorrecto",
+            },
+          })}
         />
+        {errors.email && <p>{errors.email.message}</p>}
         <input
           type="password"
           placeholder="Ingresar password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          {...register("password", {
+            setValueAs: (v) => v.trim(),
+            minLength: { value: 6, message: "Minimo 6 caracteres",
+          },
+          validate: {
+            trim: (v) => {if(!v.trim()) return "No seas payaso, escribe algo";
+            return true} 
+          }
+          })}
         />
+        {errors.password && <p>{errors.password.message}</p>}
+        <input
+          type="password"
+          placeholder="Ingresar password"
+          {...register("repassword", {
+            setValueAs: (v) => v.trim(),
+            validate: {
+              equals: (v) =>
+                v === getValues("password") || "No coinciden las contraseñas",
+            },
+          })}
+        />
+        {errors.repassword && <p>{errors.repassword.message}</p>}
         <button type="submit">Register</button>
       </form>
     </>
