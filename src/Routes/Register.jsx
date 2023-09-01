@@ -2,6 +2,7 @@ import { useContext } from "react";
 import { UserContext } from "../Context/UserProvider";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import { erroresFirebase } from "../Utils/erroresFirebase";
 
 const Register = () => {
   const navegate = useNavigate();
@@ -13,27 +14,26 @@ const Register = () => {
     handleSubmit,
     formState: { errors },
     getValues,
+    setError,
   } = useForm();
 
-
-
-  const onSubmit = async({email, password}) => {
+  const onSubmit = async ({ email, password }) => {
     console.log(email, password);
-    try{
-        await registerUser(email, password);
-        console.log("Usario creado")
-        navegate("/")
-    }catch (error) {
-        console.log(error.code)
-        alert("Este correo ya esta registrado")
+    try {
+      await registerUser(email, password);
+      console.log("Usario creado");
+      navegate("/");
+    } catch (error) {
+      console.log(error.code);
+      setError("firebase", {
+        message: erroresFirebase(error.code)
+      });
     }
   };
- 
-  
-
   return (
     <>
       <h1>Register</h1>
+      {errors.firebase && <p>{errors.firebase.message}</p>}
       <form onSubmit={handleSubmit(onSubmit)}>
         <input
           type="email"
@@ -47,21 +47,21 @@ const Register = () => {
             },
           })}
         />
-        {errors.email && <p>{errors.email.message}</p>}
+        {errors.firebase && <p>{errors.firebase.message}</p>}
         <input
           type="password"
           placeholder="Ingresar password"
           {...register("password", {
             setValueAs: (v) => v.trim(),
-            minLength: { value: 6, message: "Minimo 6 caracteres",
-          },
-          validate: {
-            trim: (v) => {if(!v.trim()) return "No seas payaso, escribe algo";
-            return true} 
-          }
+            minLength: { value: 6, message: "Minimo 6 caracteres" },
+            validate: {
+              trim: (v) => {
+                if (!v.trim()) return "No seas payaso, escribe algo";
+                return true;
+              },
+            },
           })}
         />
-        {errors.password && <p>{errors.password.message}</p>}
         <input
           type="password"
           placeholder="Ingresar password"
