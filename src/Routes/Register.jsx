@@ -4,10 +4,13 @@ import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { erroresFirebase } from "../Utils/erroresFirebase";
 
+import FormError from "../Components/FormError";
+import { formValidate } from "../Utils/formValidate";
+
 const Register = () => {
   const navegate = useNavigate();
-
-  const { registerUser } = useContext(UserContext);
+ const { registerUser } = useContext(UserContext);
+const {required, patternEmail} = formValidate()
 
   const {
     register,
@@ -18,10 +21,8 @@ const Register = () => {
   } = useForm();
 
   const onSubmit = async ({ email, password }) => {
-    console.log(email, password);
     try {
       await registerUser(email, password);
-      console.log("Usario creado");
       navegate("/");
     } catch (error) {
       console.log(error.code);
@@ -33,26 +34,21 @@ const Register = () => {
   return (
     <>
       <h1>Register</h1>
-      {errors.firebase && <p>{errors.firebase.message}</p>}
+      <FormError error={errors.firebase} />
       <form onSubmit={handleSubmit(onSubmit)}>
         <input
           type="email"
           placeholder="Ingresar email"
           {...register("email", {
-            required: { value: true, message: "Campo obligatorio" },
-            pattern: {
-              value:
-                /[a-z-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,15})/,
-              message: "Formato de email incorrecto",
-            },
+            required,
+            pattern:patternEmail,
           })}
         />
-        {errors.firebase && <p>{errors.firebase.message}</p>}
+        <FormError error={errors.email} />
         <input
           type="password"
           placeholder="Ingresar password"
           {...register("password", {
-            setValueAs: (v) => v.trim(),
             minLength: { value: 6, message: "Minimo 6 caracteres" },
             validate: {
               trim: (v) => {
@@ -62,18 +58,18 @@ const Register = () => {
             },
           })}
         />
+        <FormError error={errors.password} />
         <input
           type="password"
           placeholder="Ingresar password"
           {...register("repassword", {
-            setValueAs: (v) => v.trim(),
             validate: {
               equals: (v) =>
                 v === getValues("password") || "No coinciden las contraseñas",
             },
           })}
         />
-        {errors.repassword && <p>{errors.repassword.message}</p>}
+        <FormError error={errors.repassword} />
         <button type="submit">Register</button>
       </form>
     </>
