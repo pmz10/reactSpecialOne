@@ -1,4 +1,5 @@
-export const formValidate = () => {
+// eslint-disable-next-line no-unused-vars
+export const formValidate = (getValues) => {
   return {
     require: {
       value: true,
@@ -9,5 +10,19 @@ export const formValidate = () => {
       message: "Formato de email incorrecto",
     },
     minLength: { value: 6, message: "Minimo 6 caracteres" },
+    validateTrim: {
+      trim: (v) => {
+        if (!v.trim()) {
+          return "No seas payaso, escribe algo";
+        }
+        return true;
+      },
+    },
+    validateEquals(getValues) {
+      return {
+        equals: (v) =>
+          v === getValues("password") || "No coinciden las contraseñas",
+      };
+    },
   };
 };
