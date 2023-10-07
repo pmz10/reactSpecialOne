@@ -7,13 +7,14 @@ import RequireAuth from "./Components/RequireAuth";
 import Register from "./Routes/Register";
 import { UserContext } from "./Context/UserProvider";
 import { useContext } from "react";
+import LayoutContainerForm from "./Layout/LayoutContainerForm";
 
 const App = () => {
-  const {user} = useContext(UserContext)
+  const { user } = useContext(UserContext);
 
-  if(user === false){
-    return <p>Loading......</p>
-  } 
+  if (user === false) {
+    return <p>Loading......</p>;
+  }
 
   return (
     <>
@@ -28,8 +29,10 @@ const App = () => {
             </RequireAuth>
           }
         />
-        <Route path="/login" element={<Login />}></Route>
-        <Route path="/register" element={<Register />}></Route>
+        <Route path="/" element={<LayoutContainerForm />}>
+          <Route path="/login" element={<Login />}></Route>
+          <Route path="/register" element={<Register />}></Route>
+        </Route>
       </Routes>
     </>
   );
