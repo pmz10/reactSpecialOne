@@ -1,6 +1,6 @@
-import { useContext, } from "react";
+import { useContext } from "react";
 import { UserContext } from "../Context/UserProvider";
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { erroresFirebase } from "../Utils/erroresFirebase";
 import FormError from "../Components/FormError";
@@ -8,10 +8,8 @@ import FormInput from "../Components/FormInput";
 import { formValidate } from "../Utils/formValidate";
 
 const Login = () => {
-
-
-  const { loginUser} = useContext(UserContext);
-  const navegate =  useNavigate()
+  const { loginUser } = useContext(UserContext);
+  const navegate = useNavigate();
   const { required, patternEmail, minLength, validateTrim } = formValidate();
   const {
     register,
@@ -20,8 +18,8 @@ const Login = () => {
     setError,
   } = useForm({
     defaultValues: {
-      email:"dannyphaton@test.com",
-      password:"123123",
+      email: "dannyphaton@test.com",
+      password: "123123",
     },
   });
 
@@ -30,21 +28,18 @@ const Login = () => {
       await loginUser(email, password);
       navegate("/");
     } catch (error) {
-      console.log(error.code);
-      setError("firebase", {
-        message: erroresFirebase(error.code),
+      const { code, message } = erroresFirebase(error.code);
+      setError(code, {
+        message,
       });
     }
   };
-  
-
 
   return (
     <>
       <h1>Login</h1>
-      <FormError error={errors.password} />
       <form onSubmit={handleSubmit(onSubmit)}>
-      <FormInput
+        <FormInput
           type="email"
           placeholder="Ingresar email"
           {...register("email", {

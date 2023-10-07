@@ -11,7 +11,8 @@ import FormInput from "../Components/FormInput";
 const Register = () => {
   const navegate = useNavigate();
   const { registerUser } = useContext(UserContext);
-  const { required, patternEmail, minLength, validateTrim, validateEquals } = formValidate();
+  const { required, patternEmail, minLength, validateTrim, validateEquals } =
+    formValidate();
 
   const {
     register,
@@ -21,9 +22,9 @@ const Register = () => {
     setError,
   } = useForm({
     defaultValues: {
-      email:"dannyphaton@test.com",
-      password:"123123",
-      repassword:"123123",
+      email: "dannyphaton@test.com",
+      password: "123123",
+      repassword: "123123",
     },
   });
 
@@ -32,9 +33,10 @@ const Register = () => {
       await registerUser(email, password);
       navegate("/");
     } catch (error) {
+      const { code, message } = erroresFirebase(error.code);
       console.log(error.code);
-      setError("firebase", {
-        message: erroresFirebase(error.code),
+      setError(code, {
+        message,
       });
     }
   };
@@ -67,7 +69,7 @@ const Register = () => {
           type="password"
           placeholder="Ingresar password"
           {...register("repassword", {
-            validate: validateEquals(getValues),
+            validate: validateEquals(getValues("password")),
           })}
         >
           <FormError error={errors.repassword} />
