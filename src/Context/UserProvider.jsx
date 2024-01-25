@@ -16,7 +16,7 @@ const UserProvider = ({ children }) => {
 
   useEffect(() => {
     const unsuscribe = onAuthStateChanged(auth, (user) => {
-      console.log(user);
+      //console.log(user);
       if(user){
         const {email, photoURL, dispalayName, uid} = user
         setUser({email, photoURL, dispalayName, uid})

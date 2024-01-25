@@ -1,5 +1,6 @@
 import { initializeApp } from "firebase/app";
 import {getAuth} from 'firebase/auth'
+import { getFirestore } from "firebase/firestore/lite";
 
 const firebaseConfig = {
   apiKey: "AIzaSyByH2hVJIwmfT0RU2Ufwsg9z8EuSbmmLiY",
@@ -13,5 +14,6 @@ const firebaseConfig = {
 // eslint-disable-next-line no-unused-vars
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app)
+const db = getFirestore(app); 
 
-export {auth};
+export {auth, db};
